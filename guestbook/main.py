@@ -4,7 +4,6 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext import db
 from google.appengine.api import mail
-#from google.appengine.api import datastore
 import jinja2
 import webapp2
 import datetime
@@ -77,8 +76,8 @@ class TimeSlot(ndb.Model):
 class Resource(ndb.Model):
     name = ndb.StringProperty(indexed=False)
     availability = ndb.StructuredProperty(TimeSlot, repeated=True)
-    originalStartTime = ndb.DateTimeProperty(indexed = False)
-    originalEndTime = ndb.DateTimeProperty(indexed = True)
+    initialStartTime = ndb.DateTimeProperty(indexed = False)
+    initialEndTime = ndb.DateTimeProperty(indexed = True)
     tags = ndb.StringProperty(indexed=False, repeated = True)
     reservations = ndb.StructuredProperty(Reservations, repeated = True)
     owner = ndb.StringProperty(indexed=True)
@@ -199,8 +198,8 @@ def editResource(name, startTime, endTime, tags, resource):
     for reservation in resource.reservations:
         deleteReservationForUid(reservation.uid)
     resource.reservations = []
-    resource.originalStartTime = startTime
-    resource.originalEndTime = endTime
+    resource.initialStartTime = startTime
+    resource.initialEndTime = endTime
     resource.name = name
     resource.endTime = endTime
     tokens = tags.split(',')
@@ -210,12 +209,13 @@ def editResource(name, startTime, endTime, tags, resource):
 
 
 def sendMail(resource, reservation):
-    mail.send_mail(sender="ashwin921s@gmail.com",
+    mail.send_mail(sender="aat357@nyu.edu",
                     to=reservation.reservedBy,
                     subject="Your reservation is confirmed",
                     body = """
-                    Hi
-                    Your reservation for """ + reservation.resourceName + " is confirmed. Thank you for GAE  reservation system. ")
+    Hi
+
+    Your reservation for """ + reservation.resourceName + " is confirmed. Hope you found this application useful")
 
 def addReservation(uid, startTime, duration, resource):
     reservation = Reservations(parent=reservation_key(users.get_current_user().email()))
@@ -663,8 +663,8 @@ class AddResource(webapp2.RequestHandler):
         t_startTime = datetime.datetime.strptime(startTime, '%H:%M')
         t_endTime = datetime.datetime.strptime(endTime, '%H:%M')
         resource.availability = [TimeSlot(startTime = t_startTime, endTime = t_endTime)]
-        resource.originalStartTime = t_startTime
-        resource.originalEndTime = t_endTime
+        resource.initialStartTime = t_startTime
+        resource.initialEndTime = t_endTime
         resource.tags = tokens
         resource.owner = str(users.get_current_user().email());
         resource.reservations = []

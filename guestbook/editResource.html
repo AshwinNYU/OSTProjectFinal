@@ -20,11 +20,11 @@
       </p>
       <p>
         <label for="startTime">Start Time(HH:MM) </label>
-        <input type="text" required name="startTime" value = "{{ resource.originalStartTime.strftime('%H:%M') }}" />
+        <input type="text" required name="startTime" value = "{{ resource.initialStartTime.strftime('%H:%M') }}" />
       </p>
       <p>
         <label for="endTime">End Time(HH:MM) </label>
-        <input type="text" required name="endTime" value = "{{ resource.originalEndTime.strftime('%H:%M') }}" />
+        <input type="text" required name="endTime" value = "{{ resource.initialEndTime.strftime('%H:%M') }}" />
       </p>
       <p>
         <label for="tags">Tags </label>
