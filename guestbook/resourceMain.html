@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+<head>
+  <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+</head>
+  <body>
+    <h3 align="center" >Total reservations for
+        <a href="/resourceMain?uid={{resource.uid}}"> {{resource.name}} </a> :</h3>
+      <table style="width:100%">
+        <tr>
+          <td> Reserved by </td>
+          <td> Start Time </td>
+          <td> Duration </td>
+        </tr>
+      {% if resource.reservations %}
+        {% for reservation in resource.reservations %}
+          <tr>
+            <td> <a href="/userProfile?email={{reservation.reservedBy}}"> {{reservation.reservedBy}} </a> </td>
+            <td> {{reservation.startTime.strftime('%H:%M')}} </td>
+            <td> {{reservation.duration}} </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </table>
+    <hr>
+      Total number of reservations for this resource including past reservations: {{numberTimes}}
+    <hr>
+    <a href="/addReservation?uid={{resource.uid}}"> Add Reservation </a>
+
+    <hr>
+
+    {% if resource.owner == currentUser %}
+    	<form action="/editResource?uid={{resource.uid}}" method="get">
+          <input type="hidden" name="uid" value="{{resource.uid}}">
+      		<div><input type="submit" value="Edit Resource"></div>
+    	</form>
+    {% endif %}
+
+  </body>
+</html>
+{% endautoescape %}

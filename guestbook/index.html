@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+<head>
+  <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+</head>
+  <body>
+    <h3 align="left" >YOUR RESERVATIONS:</h3>
+    <table style="width:60%">
+      <tr>
+        <td>Name</td>
+        <td>Start Time</td>
+        <td>Duration</td>
+        <td>Delete Reservations</td>
+      </tr>
+      {% if reservations %}
+        {% for reservation in reservations %}
+          <tr>
+            <td>
+              <a href="/resourceMain?uid={{reservation.resourceUid}}">{{reservation.resourceName}}</a>
+              <a href="/generateRss?uid={{reservation.resourceUid}}"><img src="/images/rss.jpg" height="15" width="35"></a>
+            </td>
+            <td>{{reservation.startTime.strftime('%H:%M')}}</td>
+            <td>{{reservation.duration}}</td>
+            <td> <form action="/deleteReservation" method="get">
+                    <input type="hidden" name="resourceUid" value="{{reservation.resourceUid}}">
+                    <input type="hidden" name="uid" value="{{reservation.uid}}">
+                    <input type="submit" value="Delete this reservation">
+                 </form>
+            </td>
+          </tr>
+
+        {% endfor %}
+      {% endif %}
+    </table>
+
+    <hr>
+
+    <h3 align="left" >ALL RESOURCES</h3>
+    <table style="width:100%">
+      <tr>
+        <td> Name </td>
+        <td> Available Slots </td>
+        <td> Tags </td>
+      </tr>
+      {% if resources %}
+        {% for resource in resources %}
+          <tr>
+            <td>
+              <a href="/resourceMain?uid={{resource.uid}}">{{resource.name}}</a>
+              <a href="/generateRss?uid={{resource.uid}}"><img src="/images/rss.jpg" height="15" width="35"></a>
+            </td>
+            <td> {{resource.availability | processAvailableSlots}} </td>
+            <td>
+              {% for tag in resource.tags %}
+                <a href="/tagResources?tag={{tag}}">{{ tag }}</a>
+              {% endfor %}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </table>
+
+    <hr>
+
+    <h3 align="left" >YOUR RESOURCES:</h3>
+    <table style="width:100%">
+      <tr>
+        <td> Name </td>
+        <td> Available Slots </td>
+        <td> Tags </td>
+      </tr>
+      {% if myResources %}
+        {% for resource in myResources %}
+          <tr>
+            <td>
+              <a href="/resourceMain?uid={{resource.uid}}">{{resource.name}}</a>
+              <a href="/generateRss?uid={{resource.uid}}"><img src="/images/rss.jpg" height="15" width="35"></a>
+            </td>
+            <td> {{resource.availability | processAvailableSlots}} </td>
+            <td>
+              {% for tag in resource.tags %}
+                <a href="/tagResources?tag={{tag}}">{{ tag }}</a>
+              {% endfor %}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </table>
+
+
+    <hr>
+
+    <form action="/addResource" method="get">
+      <div align="center"><input type="submit" value="Add a Resource"></div>
+    </form>
+
+    <hr>
+      <h3 align="left" >Search by name:</h3>
+      <form action="/searchResource" method="post">
+        <p>
+          <input type="text" required name="searchKey" placeholder="Name" />
+        </p>
+        <p>
+          <input type="submit" value="Search">
+      </form>
+
+    <hr>
+    <a href="{{ url|safe }}">{{ url_linktext }}</a>
+
+  </body>
+</html>
+{% endautoescape %}

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+<head>
+  <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+</head>
+  <body>
+    <h2 align="center"> RSS Feed </h2>
+      {% for line in rssFeed %}
+        {{line}}
+        <br>
+      {% endfor %}
+  </body>
+</html>
+{% endautoescape %}
